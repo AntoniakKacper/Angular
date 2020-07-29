@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "182bce40-6a11-40be-8d35-117379752b7d",
+		"name": "PracaDomowa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetPersons",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "properPassword",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "properUser",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8880/person/getPersons",
+					"host": [
+						"localhost"
+					],
+					"port": "8880",
+					"path": [
+						"person",
+						"getPersons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByName",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "properPassword",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "properUser",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "Nazwisko 2"
+				},
+				"url": {
+					"raw": "localhost:8880/person/getPersonByName",
+					"host": [
+						"localhost"
+					],
+					"port": "8880",
+					"path": [
+						"person",
+						"getPersonByName"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatePerson",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "properPassword",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "properUser",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"id\": \"21d593de-ca00-4ed1-a079-e39da7e418f0\",\r\n        \"firstName\": \"Imie 1\",\r\n        \"lastName\": \"Nazwisko 2\",\r\n        \"age\": 25,\r\n        \"profession\": \"śmietnik\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8880/person/updatePerson",
+					"host": [
+						"localhost"
+					],
+					"port": "8880",
+					"path": [
+						"person",
+						"updatePerson"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
