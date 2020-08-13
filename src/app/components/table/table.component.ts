@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Person } from '../../models/Person';
 import { TableService } from '../../services/table.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
@@ -14,12 +14,15 @@ import { DialogComponent } from '../dialog/dialog.component';
 })
 export class TableComponent implements OnInit {
   displayedColumns: string[] = ['firstName', 'lastName', 'age', 'profession'];
-  private _filter: any;
-  status: boolean = false;
-  data: Person[];
-  sorted: boolean = false;
-  persons = [];
   activeColumn: string;
+
+  data: Person[];
+  persons: Person[] = [];
+
+  _filter: any;
+  status: boolean = false;
+  sorted: boolean = false;
+
   dataSource = new MatTableDataSource<Person>(this.data);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -37,9 +40,12 @@ export class TableComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.persons = result;
       this.dataSource.data = result as Person[];
-      this.persons = result;
     });
 
+    this.filterOverwrite();
+  }
+
+  filterOverwrite() {
     this.dataSource.filterPredicate = (data: Person, filters: string) => {
       const parsedFilters = JSON.parse(filters);
 
@@ -52,18 +58,43 @@ export class TableComponent implements OnInit {
   onEdit(row) {
     this.tableService.populateForm(row);
 
-    this.dialog.open(DialogComponent);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = this.dataSource.data;
+
+    let editDialog = this.dialog.open(DialogComponent, dialogConfig);
+    editDialog.afterClosed().subscribe((persons) => {
+      if (persons) {
+        this.dataSource.data = persons;
+      }
+    });
   }
 
-  public applyFilter(filterValue: string, column) {
+  applyFilter(filterValue: string, column) {
     this._filter = {
       ...this._filter,
       [column]: filterValue,
     };
 
-    if (!filterValue) delete this._filter[column];
+    if (column === 'firstName') {
+      if (!filterValue) delete this._filter[column];
 
-    this.dataSource.filter = JSON.stringify(this._filter);
+      this.dataSource.filter = JSON.stringify(this._filter);
+    }
+    if (column === 'lastName') {
+      if (!filterValue) delete this._filter[column];
+      this.dataSource.filter = JSON.stringify(this._filter);
+    }
+    if (column === 'age') {
+      if (!filterValue) delete this._filter[column];
+      this.dataSource.filter = JSON.stringify(this._filter);
+    }
+    if (column === 'profession') {
+      if (!filterValue) delete this._filter[column];
+      this.dataSource.filter = JSON.stringify(this._filter);
+    } else {
+      console.log('brak wynikow');
+    }
   }
 
   onSortEvent(event) {

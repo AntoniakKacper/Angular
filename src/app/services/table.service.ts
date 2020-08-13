@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Person } from '../models/Person';
 import { FormGroup, FormControl } from '@angular/forms';
-import { environment } from '../../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -15,6 +14,8 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class TableService {
+  constructor(private http: HttpClient) {}
+
   form: FormGroup = new FormGroup({
     id: new FormControl(''),
     firstName: new FormControl(''),
@@ -32,10 +33,12 @@ export class TableService {
     });
   }
 
-  constructor(private http: HttpClient) {}
-
   getData(): Observable<Person[]> {
-    return this.http.get<Person[]>(environment.url);
+    return this.http.get<Person[]>('/person/getPersons');
+  }
+
+  updatePerson(person: Person): Observable<any> {
+    return this.http.post<Person>('/person/updatePerson', person, httpOptions);
   }
 
   populateForm(person) {
