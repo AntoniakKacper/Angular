@@ -7,15 +7,15 @@
       matSort
     >
       <ng-container
-        *ngFor="let column of displayedColumns"
-        matColumnDef="{{ column }}"
+        *ngFor="let column of displayedHeaders"
+        matColumnDef="{{ column.key }}"
       >
         <th mat-header-cell *matHeaderCellDef>
-          <span mat-sort-header>{{ column | uppercase }}</span>
+          <span mat-sort-header>{{ column.header }}</span>
           <mat-form-field class="filter" floatLabel="never">
-            <mat-label>{{ column }}</mat-label>
+            <mat-label>{{ column.header }}</mat-label>
             <form [formGroup]="form">
-              <input matInput formControlName="{{ column }}" />
+              <input matInput formControlName="{{ column.key }}" />
             </form>
           </mat-form-field>
         </th>
@@ -23,9 +23,9 @@
           mat-cell
           *matCellDef="let row"
           (click)="onEdit(row)"
-          [class.highlight]="column === activeColumn"
+          [class.highlight]="column.key === activeColumn"
         >
-          {{ row[column] }}
+          {{ row[column.key] }}
         </td>
       </ng-container>
 

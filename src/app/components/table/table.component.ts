@@ -21,7 +21,26 @@ export class TableComponent implements OnInit {
     profession: new FormControl(''),
   });
 
+  displayedHeaders: Array<any> = [
+    {
+      key: 'firstName',
+      header: 'Imię',
+    },
+    {
+      key: 'lastName',
+      header: 'Nazwisko',
+    },
+    {
+      key: 'age',
+      header: 'Wiek',
+    },
+    {
+      key: 'profession',
+      header: 'Zawód',
+    },
+  ];
   displayedColumns: string[] = ['firstName', 'lastName', 'age', 'profession'];
+
   activeColumn: string;
 
   data: Person[];
@@ -88,6 +107,10 @@ export class TableComponent implements OnInit {
   }
 
   onSortEvent(event) {
-    this.activeColumn = event.active;
+    if (event.direction === '') {
+      this.activeColumn = '';
+    } else {
+      this.activeColumn = event.active;
+    }
   }
 }
