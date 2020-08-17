@@ -12,12 +12,12 @@
       >
         <th mat-header-cell *matHeaderCellDef>
           <span mat-sort-header>{{ column | uppercase }}</span>
-          <input
-            class="filter-input"
-            matInput
-            (keyup)="applyFilter($event.target.value, column)"
-            placeholder="Filter {{ column }}"
-          />
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>{{ column }}</mat-label>
+            <form [formGroup]="form">
+              <input matInput formControlName="{{ column }}" />
+            </form>
+          </mat-form-field>
         </th>
         <td
           mat-cell
@@ -31,12 +31,6 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No data matching the filter "{{ input.value }}"
-        </td>
-      </tr>
     </table>
 
     <mat-paginator [pageSize]="[100]"></mat-paginator>

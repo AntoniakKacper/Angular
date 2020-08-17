@@ -6,6 +6,7 @@ import { Person } from '../../models/Person';
 import { TableService } from '../../services/table.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-table',
@@ -13,13 +14,19 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
+  form: FormGroup = new FormGroup({
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
+    age: new FormControl(''),
+    profession: new FormControl(''),
+  });
+
   displayedColumns: string[] = ['firstName', 'lastName', 'age', 'profession'];
   activeColumn: string;
 
   data: Person[];
   persons: Person[] = [];
 
-  _filter: any;
   status: boolean = false;
   sorted: boolean = false;
 
@@ -32,27 +39,37 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     this.displayData();
+    this.filter();
+    this.dataSource.filterPredicate = this.createFilter();
   }
 
   displayData() {
     this.tableService.getData().subscribe((result) => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.persons = result;
       this.dataSource.data = result as Person[];
     });
-
-    this.filterOverwrite();
   }
 
-  filterOverwrite() {
-    this.dataSource.filterPredicate = (data: Person, filters: string) => {
-      const parsedFilters = JSON.parse(filters);
+  filter() {
+    this.form.valueChanges.subscribe((value) => {
+      this.dataSource.filter = JSON.stringify(value);
+    });
+  }
 
-      return Object.keys(parsedFilters)
-        .map((column) => data[column].includes(parsedFilters[column]))
-        .reduce((acc: boolean, curr: boolean) => (acc = curr) && acc, true);
+  createFilter(): (data: any, filter: string) => boolean {
+    let filterFunction = function (data, filter): boolean {
+      let searchTerms = JSON.parse(filter);
+
+      return (
+        data.firstName.toLowerCase().indexOf(searchTerms.firstName) !== -1 &&
+        data.lastName.toString().toLowerCase().indexOf(searchTerms.lastName) !==
+          -1 &&
+        data.age.toString().indexOf(searchTerms.age) !== -1 &&
+        data.profession.toLowerCase().indexOf(searchTerms.profession) !== -1
+      );
     };
+    return filterFunction;
   }
 
   onEdit(row) {
@@ -68,33 +85,6 @@ export class TableComponent implements OnInit {
         this.dataSource.data = persons;
       }
     });
-  }
-
-  applyFilter(filterValue: string, column) {
-    this._filter = {
-      ...this._filter,
-      [column]: filterValue,
-    };
-
-    if (column === 'firstName') {
-      if (!filterValue) delete this._filter[column];
-
-      this.dataSource.filter = JSON.stringify(this._filter);
-    }
-    if (column === 'lastName') {
-      if (!filterValue) delete this._filter[column];
-      this.dataSource.filter = JSON.stringify(this._filter);
-    }
-    if (column === 'age') {
-      if (!filterValue) delete this._filter[column];
-      this.dataSource.filter = JSON.stringify(this._filter);
-    }
-    if (column === 'profession') {
-      if (!filterValue) delete this._filter[column];
-      this.dataSource.filter = JSON.stringify(this._filter);
-    } else {
-      console.log('brak wynikow');
-    }
   }
 
   onSortEvent(event) {
